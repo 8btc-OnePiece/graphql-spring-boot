@@ -1,5 +1,7 @@
 package graphql.kickstart.voyager.boot;
 
+import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.text.StrSubstitutor;
 import org.springframework.beans.factory.annotation.Value;
@@ -56,6 +58,7 @@ public class VoyagerIndexHtmlTemplate {
                 joinJsDelivrPath(VOYAGER, voyagerCdnVersion, "dist/voyager.min.js")));
         replacements.put("voyagerWorkerJsUrl", getResourceUrl(staticBasePath, "voyager.worker.js",
                 joinJsDelivrPath(VOYAGER, voyagerCdnVersion, "dist/voyager.worker.min.js")));
+        replacements.put("voyagerBodyJsUrl", getResourceUrl(staticBasePath, "voyager.body.js", null));
         replacements.put("contextPath", contextPath);
 
         return StrSubstitutor.replace(template, replacements);

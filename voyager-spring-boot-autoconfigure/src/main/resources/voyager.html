@@ -32,37 +32,9 @@
     </style>
 </head>
 <body>
+
 <div id="voyager">Loading...</div>
-<script>
-    function introspectionProvider(introspectionQuery) {
-        return fetch('${graphqlEndpoint}', {
-            method: 'post',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ query: introspectionQuery }),
-            credentials: 'include'
-        }).then(function(response) {
-            return response.text();
-        }).then(function(responseBody) {
-            try {
-                return JSON.parse(responseBody);
-            } catch(error) {
-                return responseBody;
-            }
-        });
-    }
-
-    // Render <Voyager /> into the body.
-    GraphQLVoyager.init(document.getElementById('voyager'), {
-        introspection: introspectionProvider
-    })
-
-
-
-
-
-</script>
 </body>
+<input id="graphqlEndpoint" type="hidden" value="${graphqlEndpoint}"/>
+<script src="${voyagerBodyJsUrl}"></script>
 </html>
