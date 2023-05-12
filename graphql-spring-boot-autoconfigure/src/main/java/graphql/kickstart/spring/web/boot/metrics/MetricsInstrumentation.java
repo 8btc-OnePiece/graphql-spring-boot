@@ -7,6 +7,7 @@ import graphql.execution.instrumentation.tracing.TracingInstrumentation;
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Timer;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -101,7 +102,10 @@ public class MetricsInstrumentation extends TracingInstrumentation {
                 if (error.getExtensions() != null && error.getExtensions().containsKey("classification")) {
                     classification = error.getExtensions().get("classification").toString();
                 }
-                buildErrorCounter(operationName, path, code, classification).increment();
+                //special requirement: some error is not real error.
+                if (StringUtils.isNotEmpty(code) && !code.endsWith("0000")) {
+                    buildErrorCounter(operationName, path, code, classification).increment();
+                }
             }
         }
     }
