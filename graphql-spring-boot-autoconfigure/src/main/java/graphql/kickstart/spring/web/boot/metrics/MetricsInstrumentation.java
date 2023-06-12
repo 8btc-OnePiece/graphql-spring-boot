@@ -1,5 +1,6 @@
 package graphql.kickstart.spring.web.boot.metrics;
 
+import graphql.ExceptionWhileDataFetching;
 import graphql.ExecutionResult;
 import graphql.GraphQLError;
 import graphql.execution.instrumentation.parameters.InstrumentationExecutionParameters;
@@ -13,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * @author Bruno Rodrigues
@@ -92,19 +94,23 @@ public class MetricsInstrumentation extends TracingInstrumentation {
     private void transformErrorInfoToMicrometer(ExecutionResult executionResult, String operationName) {
         if (executionResult.getErrors() != null && executionResult.getErrors().size() > 0) {
             for (GraphQLError error : executionResult.getErrors()) {
-                String path = null, code = null, classification = null;
-                if (error.getPath() != null && error.getPath().size() > 0) {
-                    path = error.getPath().get(0).toString();
+                String allPath = null, code = null, classification = null;
+                List<Object> paths = error.getPath();
+                if (paths != null && paths.size() > 0) {
+                    allPath = paths.stream().map(Object::toString).collect(Collectors.joining("."));
                 }
                 if (error.getExtensions() != null && error.getExtensions().containsKey("code")) {
                     code = error.getExtensions().get("code").toString();
                 }
                 if (error.getExtensions() != null && error.getExtensions().containsKey("classification")) {
                     classification = error.getExtensions().get("classification").toString();
+                }else if (error instanceof ExceptionWhileDataFetching){
+                    classification = ((ExceptionWhileDataFetching) error).getException().getClass().getName();
                 }
-                //special requirement: some error is not real error.
-                if (StringUtils.isNotEmpty(code) && !code.endsWith("0000")) {
-                    buildErrorCounter(operationName, path, code, classification).increment();
+
+                //special requirement: some code is null, or some error is not real error.
+                if (StringUtils.isEmpty(code) || !code.endsWith("0000")) {
+                    buildErrorCounter(operationName, allPath, code, classification).increment();
                 }
             }
         }
