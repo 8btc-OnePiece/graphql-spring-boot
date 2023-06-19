@@ -9,6 +9,7 @@ import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Timer;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -97,7 +98,9 @@ public class MetricsInstrumentation extends TracingInstrumentation {
                 String allPath = null, code = null, classification = null;
                 List<Object> paths = error.getPath();
                 if (paths != null && paths.size() > 0) {
-                    allPath = paths.stream().map(Object::toString).collect(Collectors.joining("."));
+                    allPath = paths.stream().map(Object::toString)
+                            .filter(path -> !NumberUtils.isCreatable(path))
+                            .collect(Collectors.joining("."));
                 }
                 if (error.getExtensions() != null && error.getExtensions().containsKey("code")) {
                     code = error.getExtensions().get("code").toString();
@@ -119,25 +122,25 @@ public class MetricsInstrumentation extends TracingInstrumentation {
     private Timer buildQueryTimer(String operationName, String operation) {
         return Timer.builder(QUERY_TIME_METRIC_NAME)
                 .description(TIMER_DESCRIPTION)
-                .tag(OPERATION_NAME_TAG, operationName != null ? operationName : UNKNOWN_NAME)
                 .tag(OPERATION, operation)
                 .register(meterRegistry);
     }
 
     private Timer buildFieldTimer(String operationName, String operation, String parent, String field) {
-        return Timer.builder(RESOLVER_TIME_METRIC_NAME)
+        Timer.Builder builder = Timer.builder(RESOLVER_TIME_METRIC_NAME)
                 .description(TIMER_DESCRIPTION)
-                .tag(OPERATION_NAME_TAG, operationName != null ? operationName : UNKNOWN_NAME)
                 .tag(PARENT, parent)
-                .tag(FIELD, field)
-                .tag(OPERATION, operation)
-                .register(meterRegistry);
+                .tag(OPERATION, operation);
+        if (StringUtils.isNoneBlank(field) && !field.startsWith("_")) {
+            //ignore some field in federation protocol
+            builder.tag(FIELD, field);
+        }
+        return builder.register(meterRegistry);
     }
 
     private Counter buildErrorCounter(String operationName, String path, String code, String classification) {
         return Counter.builder(ERROR_COUNTER_METRIC_NAME)
                 .description(COUNTER_DESCRIPTION)
-                .tag(OPERATION_NAME_TAG, operationName != null ? operationName : UNKNOWN_NAME)
                 .tag(PATH, path != null ? path : UNKNOWN_NAME)
                 .tag(CODE, code != null ? code : UNKNOWN_NAME)
                 .tag(CLASSIFICATION, classification != null ? classification : UNKNOWN_NAME)
