@@ -21,6 +21,7 @@ plugins {
     id "com.jfrog.bintray" version "$LIB_BINTRAY_PLUGIN_VER" apply false
     id 'net.researchgate.release' version "$LIB_RELEASE_PLUGIN_VER"
     id "org.springframework.boot" version "$LIB_SPRING_BOOT_VER" apply false
+    id 'maven-publish'
 }
 
 subprojects {
@@ -34,7 +35,11 @@ subprojects {
     group  "$PROJECT_GROUP"
 
     repositories {
+        maven { url 'https://maven.aliyun.com/repository/public'}
+        maven { url 'https://maven.aliyun.com/repository/spring'}
         mavenLocal()
+        //为了去私服拿到我们自己的deploy的包
+//        maven { url 'https://nexus.8btc-ops.com/repository/maven-releases/'}
         mavenCentral()
         jcenter()
         maven { url "https://dl.bintray.com/graphql-java-kickstart/releases" }
@@ -91,69 +96,24 @@ subprojects {
         }
 
         publishing {
+            repositories {
+                maven {
+                    url version.endsWith('SNAPSHOT')? SNAPSHOT_MAVEN_URL:RELEASE_MAVEN_URL
+                    credentials {
+                        username = NEXUS_USERNAME
+                        password = NEXUS_PASSWORD
+                    }
+                }
+            }
+
             publications {
-                mainProjectPublication(MavenPublication) {
+                mavenJava(MavenPublication) {
                     from components.java
-
-                    // to avoid "Publication only contains dependencies and/or constraints without a version" error
-                    // see https://docs.gradle.org/6.2.1/userguide/publishing_maven.html#publishing_maven:resolved_dependencies
-                    versionMapping {
-                        usage('java-api') {
-                            fromResolutionOf('runtimeClasspath')
-                        }
-                        usage('java-runtime') {
-                            fromResolutionResult()
-                        }
-                    }
-
-                    pom {
-                        resolveStrategy = DELEGATE_FIRST
-                        name = PROJECT_NAME
-                        description = PROJECT_DESC
-                        url = PROJECT_GIT_REPO_URL
-                        scm {
-                            url = PROJECT_GIT_REPO_URL
-                            connection = PROJECT_GIT_REPO_URL
-                            developerConnection = PROJECT_GIT_REPO_URL
-                        }
-                        licenses {
-                            license {
-                                name = PROJECT_LICENSE
-                                url = PROJECT_LICENSE_URL
-                                distribution = 'repo'
-                            }
-                        }
-                        developers {
-                            developer {
-                                id = PROJECT_DEV_ID
-                                name = PROJECT_DEV_NAME
-                            }
-                        }
-                    }
                 }
             }
         }
 
-        bintray {
-            user = System.env.BINTRAY_USER ?: project.findProperty('BINTRAY_USER') ?: ''
-            key = System.env.BINTRAY_PASS ?: project.findProperty('BINTRAY_PASS') ?: ''
-            publications = ['mainProjectPublication']
-            publish = true
-            pkg {
-                repo = 'releases'
-                name = PROJECT_NAME
-                desc = PROJECT_DESC
-                licenses = [PROJECT_LICENSE]
-                vcsUrl = PROJECT_GIT_REPO_URL
-                userOrg = 'graphql-java-kickstart'
-                version {
-                    name = project.version
-                    mavenCentralSync {
-                        close = '1'
-                    }
-                }
-            }
-        }
+
     }
 }
 
