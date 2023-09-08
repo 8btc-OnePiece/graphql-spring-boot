@@ -100,8 +100,8 @@ subprojects {
                 maven {
                     url version.endsWith('SNAPSHOT')? SNAPSHOT_MAVEN_URL:RELEASE_MAVEN_URL
                     credentials {
-                        username = NEXUS_USERNAME
-                        password = NEXUS_PASSWORD
+                        username = System.getenv('NEXUS_USERNAME')
+                        password = System.getenv('NEXUS_PASSWORD')
                     }
                 }
             }
