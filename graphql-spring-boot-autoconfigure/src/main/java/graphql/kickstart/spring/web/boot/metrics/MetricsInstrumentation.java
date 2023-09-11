@@ -107,8 +107,10 @@ public class MetricsInstrumentation extends TracingInstrumentation {
                 }
                 if (error.getExtensions() != null && error.getExtensions().containsKey("classification")) {
                     classification = error.getExtensions().get("classification").toString();
-                }else if (error instanceof ExceptionWhileDataFetching){
+                } else if (error instanceof ExceptionWhileDataFetching) {
                     classification = ((ExceptionWhileDataFetching) error).getException().getClass().getName();
+                } else {
+                    classification = error.getClass().getName();
                 }
 
                 //special requirement: some code is null, or some error is not real error.
