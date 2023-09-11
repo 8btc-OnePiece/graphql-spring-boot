@@ -108,12 +108,12 @@ public class MetricsInstrumentation extends TracingInstrumentation {
                 }
                 if (error.getExtensions() != null && error.getExtensions().containsKey("classification")) {
                     classification = error.getExtensions().get("classification").toString();
-                }else if (error instanceof ExceptionWhileDataFetching){
+                } else if (error instanceof ExceptionWhileDataFetching) {
                     //the metrics only focus this category
                     ExceptionWhileDataFetching ewdf = (ExceptionWhileDataFetching) error;
                     if (ewdf.getException() instanceof CompletionException) {
                         classification = ewdf.getException().getCause().getClass().getName();
-                    }else {
+                    } else {
                         classification = ewdf.getException().getClass().getName();
                     }
                 } else {
