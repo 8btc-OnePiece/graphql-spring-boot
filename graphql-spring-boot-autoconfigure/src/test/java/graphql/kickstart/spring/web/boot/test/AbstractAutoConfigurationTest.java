@@ -11,8 +11,8 @@ import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.mock.web.MockServletContext;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 
-import javax.servlet.ServletContext;
-import javax.websocket.server.ServerContainer;
+import jakarta.servlet.ServletContext;
+import jakarta.websocket.server.ServerContainer;
 
 import static org.mockito.Mockito.mock;
 
@@ -68,7 +68,7 @@ public abstract class AbstractAutoConfigurationTest {
         if (context instanceof AnnotationConfigWebApplicationContext) {
             ServerContainer serverContainer = mock(ServerContainer.class);
             ServletContext servletContext = new MockServletContext();
-            servletContext.setAttribute("javax.websocket.server.ServerContainer", serverContainer);
+            servletContext.setAttribute("jakarta.websocket.server.ServerContainer", serverContainer);
             ((AnnotationConfigWebApplicationContext) context).setServletContext(servletContext);
         }
     }

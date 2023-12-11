@@ -4,9 +4,9 @@ import graphql.kickstart.servlet.GraphQLWebsocketServlet;
 import org.springframework.context.Lifecycle;
 import org.springframework.web.socket.server.standard.ServerEndpointRegistration;
 
-import javax.websocket.HandshakeResponse;
-import javax.websocket.server.HandshakeRequest;
-import javax.websocket.server.ServerEndpointConfig;
+import jakarta.websocket.HandshakeResponse;
+import jakarta.websocket.server.HandshakeRequest;
+import jakarta.websocket.server.ServerEndpointConfig;
 
 /**
  * @author Andrew Potter
