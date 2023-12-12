@@ -56,31 +56,31 @@ public class GraphQLErrorHandlerTest extends AbstractAutoConfigurationTest {
   static class BaseConfiguration {
 
     public class Query implements GraphQLQueryResolver {
-      boolean illegalArgumentException() {
+     public boolean illegalArgumentException() {
         throw new IllegalArgumentException("Illegal argument");
       }
 
-      boolean illegalStateException() {
+      public boolean illegalStateException() {
         throw new IllegalStateException("Illegal state");
       }
 
       @ExceptionHandler(IllegalArgumentException.class)
-      ThrowableGraphQLError handle(IllegalArgumentException e) {
+      public ThrowableGraphQLError handle(IllegalArgumentException e) {
         return new ThrowableGraphQLError(e, "Illegal argument");
       }
 
       @ExceptionHandler(Throwable.class)
-      GraphQLError handle(Throwable e) {
+      public GraphQLError handle(Throwable e) {
         return new ThrowableGraphQLError(e, "Catch all handler");
       }
 
       @Bean
-      Query queryResolver() {
+      public Query queryResolver() {
         return new Query();
       }
 
       @Bean
-      GraphQLSchema schema() {
+      public GraphQLSchema schema() {
         SchemaParser schemaParser = SchemaParser.newParser()
                 .file("graphql/error-handler-test.graphql")
                 .resolvers(queryResolver())
