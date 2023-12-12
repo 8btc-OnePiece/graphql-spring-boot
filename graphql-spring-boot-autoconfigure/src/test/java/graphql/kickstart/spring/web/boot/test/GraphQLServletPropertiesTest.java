@@ -1,10 +1,9 @@
 package graphql.kickstart.spring.web.boot.test;
 
 import graphql.kickstart.spring.web.boot.GraphQLServletProperties;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author Andrew Potter
@@ -13,31 +12,39 @@ public class GraphQLServletPropertiesTest {
 
     @Test
     public void getServletMappingReturnsAppropriateWildcardValue() {
-        verifyServletMapping("/graphql", "/graphql/*");
-        verifyServletMapping("/graphql/", "/graphql/*");
-        verifyServletMapping("/graphql/*", "/graphql/*");
-        verifyServletMapping("/graphql/**", "/graphql/*");
+        verifyServletMapping("/graphql");
+        verifyServletMapping("/graphql/");
+        verifyServletMapping("/graphql/*");
+        verifyServletMapping("/graphql/**");
     }
 
     @Test
     public void getCorsMappingReturnsAppropriateWildcardValue() {
-        verifyCorsMapping("/graphql", "/graphql/**");
-        verifyCorsMapping("/graphql/", "/graphql/**");
-        verifyCorsMapping("/graphql/*", "/graphql/**");
-        verifyCorsMapping("/graphql/**", "/graphql/**");
+        verifyCorsMapping("/graphql");
+        verifyCorsMapping("/graphql/");
+        verifyCorsMapping("/graphql/*");
+        verifyCorsMapping("/graphql/**");
     }
 
-    private void verifyCorsMapping(String mapping, String expected) {
+    private void verifyCorsMapping(String mapping) {
         GraphQLServletProperties servletProperties = new GraphQLServletProperties();
         servletProperties.setMapping(mapping);
 
-        assertEquals(String.format("Expected mapping '%s' to return cors mapping '%s'", mapping, expected), servletProperties.getCorsMapping(), expected);
+        assertThat(servletProperties.getCorsMapping())
+                .as(
+                        String.format(
+                                "Expected mapping '%s' to return cors mapping '%s'", mapping, "/graphql/**"))
+                .isEqualTo("/graphql/**");
     }
 
-    private void verifyServletMapping(String mapping, String expected) {
+    private void verifyServletMapping(String mapping) {
         GraphQLServletProperties servletProperties = new GraphQLServletProperties();
         servletProperties.setMapping(mapping);
 
-        assertEquals(String.format("Expected mapping '%s' to return servlet mapping '%s'", mapping, expected), servletProperties.getServletMapping(), expected);
+        assertThat(servletProperties.getServletMapping())
+                .as(
+                        String.format(
+                                "Expected mapping '%s' to return servlet mapping '%s'", mapping, "/graphql/*"))
+                .isEqualTo("/graphql/*");
     }
 }

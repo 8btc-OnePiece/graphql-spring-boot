@@ -1,6 +1,6 @@
 package graphql.kickstart.spring.web.boot.test;
 
-import org.junit.After;
+import org.junit.jupiter.api.AfterEach;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -36,7 +36,7 @@ public abstract class AbstractAutoConfigurationTest {
         this.autoConfiguration = autoConfiguration;
     }
 
-    @After
+    @AfterEach
     public void tearDown() {
         if (this.context != null) {
             this.context.close();
@@ -61,7 +61,9 @@ public abstract class AbstractAutoConfigurationTest {
 
         loadServletContext();
         getContext().refresh();
-        getContext().publishEvent(new ApplicationReadyEvent(new SpringApplication(), new String[0], getContext()));
+        getContext()
+                .publishEvent(
+                        new ApplicationReadyEvent(new SpringApplication(), new String[0], getContext(), null));
     }
 
     private void loadServletContext() {

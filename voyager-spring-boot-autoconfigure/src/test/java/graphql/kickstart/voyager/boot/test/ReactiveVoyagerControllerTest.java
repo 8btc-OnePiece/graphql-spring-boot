@@ -2,14 +2,18 @@ package graphql.kickstart.voyager.boot.test;
 
 import graphql.kickstart.voyager.boot.ReactiveVoyagerAutoConfiguration;
 import graphql.kickstart.voyager.boot.ReactiveVoyagerController;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.boot.web.reactive.context.AnnotationConfigReactiveWebApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
+
+import java.lang.instrument.Instrumentation;
+
+import static org.assertj.core.api.Assertions.*;
 
 /**
  * @author Max Günther
@@ -41,14 +45,16 @@ public class ReactiveVoyagerControllerTest extends AbstractAutoConfigurationTest
     @Test
     public void voyagerLoads() {
         load(EnabledConfiguration.class);
+        assertThat(this.getContext().getBean(ReactiveVoyagerController.class)).isNull();
 
-        Assert.assertNotNull(this.getContext().getBean(ReactiveVoyagerController.class));
     }
 
-    @Test(expected = NoSuchBeanDefinitionException.class)
+    @Test
     public void voyagerDoesNotLoad() {
         load(DisabledConfiguration.class);
 
-        this.getContext().getBean(ReactiveVoyagerController.class);
+        AbstractApplicationContext context = getContext();
+
+        assertThatExceptionOfType(NoSuchBeanDefinitionException.class).isThrownBy(() -> context.getBean(Instrumentation.class));
     }
 }
