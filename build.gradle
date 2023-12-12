@@ -31,7 +31,7 @@ subprojects {
     apply plugin: "com.jfrog.bintray"
     apply plugin: "io.spring.dependency-management"
 
-    group  "$PROJECT_GROUP"
+    group "$PROJECT_GROUP"
 
     repositories {
         mavenLocal()
@@ -40,6 +40,13 @@ subprojects {
         maven { url "https://dl.bintray.com/graphql-java-kickstart/releases" }
         maven { url "https://oss.jfrog.org/artifactory/oss-snapshot-local" }
         maven { url "https://repo.spring.io/libs-milestone" }
+        maven {
+            url "https://nexus.8btc-ops.com/repository/maven-snapshots/"
+            credentials {
+                username System.env.NEXUS_USERNAME ?: project.findProperty('NEXUS_PASSWORD') ?: ''
+                password System.env.NEXUS_PASSWORD ?: project.findProperty('NEXUS_PASSWORD') ?: ''
+            }
+        }
     }
 
     dependencyManagement {
