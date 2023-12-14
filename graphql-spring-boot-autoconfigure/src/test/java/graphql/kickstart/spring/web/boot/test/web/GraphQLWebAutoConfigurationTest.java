@@ -1,5 +1,6 @@
 package graphql.kickstart.spring.web.boot.test.web;
 
+import graphql.Assert;
 import graphql.kickstart.servlet.AbstractGraphQLHttpServlet;
 import graphql.kickstart.servlet.config.DefaultGraphQLSchemaServletProvider;
 import graphql.kickstart.servlet.config.GraphQLSchemaServletProvider;
@@ -12,8 +13,7 @@ import graphql.execution.ExecutionStrategy;
 import graphql.execution.instrumentation.tracing.TracingInstrumentation;
 import graphql.schema.GraphQLObjectType;
 import graphql.schema.GraphQLSchema;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;

@@ -1,0 +1,3 @@
+graphql.kickstart.spring.web.boot.GraphQLWebAutoConfiguration
+graphql.kickstart.spring.web.boot.GraphQLWebsocketAutoConfiguration
+graphql.kickstart.spring.web.boot.GraphQLInstrumentationAutoConfiguration

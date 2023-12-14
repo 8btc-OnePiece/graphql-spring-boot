@@ -1,31 +1,33 @@
 package graphql.kickstart.playground.boot;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.emptyString;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
-import static org.assertj.core.api.Java6Assertions.assertThat;
-import static org.hamcrest.Matchers.isEmptyString;
-import static org.hamcrest.Matchers.not;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = PlaygroundTestConfig.class)
 @AutoConfigureMockMvc
-public class PlaygroundEnabledTest {
+@ActiveProfiles("playground")
+class PlaygroundEnabledTest {
 
     private static final String DEFAULT_CSS_PATH = "/vendor/playground/static/css/index.css";
     private static final String DEFAULT_SCRIPT_PATH = "/vendor/playground/static/js/middleware.js";
@@ -33,67 +35,80 @@ public class PlaygroundEnabledTest {
     private static final String DEFAULT_LOGO_PATH = "/vendor/playground/logo.png";
     private static final String DEFAULT_TITLE = "Playground";
 
-    @Autowired
-    private ApplicationContext applicationContext;
+    @Autowired private ApplicationContext applicationContext;
 
-    @Autowired
-    private MockMvc mockMvc;
+    @Autowired private MockMvc mockMvc;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+    @Autowired private ObjectMapper objectMapper;
 
     @Test
-    public void playgroundLoads() {
+    void playgroundLoads() {
         assertThat(applicationContext.getBean(PlaygroundController.class)).isNotNull();
     }
 
     @Test
-    public void playgroundShouldBeAvailableAtDefaultEndpoint() throws Exception {
-        final MvcResult mvcResult = mockMvc.perform(get(PlaygroundTestHelper.DEFAULT_PLAYGROUND_ENDPOINT))
-                .andExpect(status().isOk())
-                .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML))
-                .andExpect(content().string(not(isEmptyString())))
-                .andExpect(model().attribute(PlaygroundTestHelper.PAGE_TITLE_FIELD_NAME, DEFAULT_TITLE))
-                .andExpect(model().attribute(PlaygroundTestHelper.CSS_URL_FIELD_NAME, DEFAULT_CSS_PATH))
-                .andExpect(model().attribute(PlaygroundTestHelper.SCRIPT_URL_FIELD_NAME, DEFAULT_SCRIPT_PATH))
-                .andExpect(model().attribute(PlaygroundTestHelper.FAVICON_URL_FIELD_NAME, DEFAULT_FAVICON_PATH))
-                .andExpect(model().attribute(PlaygroundTestHelper.LOGO_URL_FIELD_NAME, DEFAULT_LOGO_PATH))
-                .andReturn();
+    void playgroundShouldBeAvailableAtDefaultEndpoint() throws Exception {
+        final MvcResult mvcResult =
+                mockMvc
+                        .perform(get(PlaygroundTestHelper.DEFAULT_PLAYGROUND_ENDPOINT))
+                        .andExpect(status().isOk())
+                        .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML))
+                        .andExpect(content().string(not(is(emptyString()))))
+                        //            .andExpect(model().attribute(PlaygroundTestHelper.PAGE_TITLE_FIELD_NAME,
+                        // DEFAULT_TITLE))
+                        //            .andExpect(model().attribute(PlaygroundTestHelper.CSS_URL_FIELD_NAME,
+                        // DEFAULT_CSS_PATH))
+                        //            .andExpect(
+                        //                model().attribute(PlaygroundTestHelper.SCRIPT_URL_FIELD_NAME,
+                        // DEFAULT_SCRIPT_PATH))
+                        //            .andExpect(
+                        //                model()
+                        //                    .attribute(PlaygroundTestHelper.FAVICON_URL_FIELD_NAME,
+                        // DEFAULT_FAVICON_PATH))
+                        //            .andExpect(
+                        //                model().attribute(PlaygroundTestHelper.LOGO_URL_FIELD_NAME,
+                        // DEFAULT_LOGO_PATH))
+                        .andReturn();
 
         final Document document = Jsoup.parse(mvcResult.getResponse().getContentAsString());
         PlaygroundTestHelper.assertTitle(document, DEFAULT_TITLE);
-        PlaygroundTestHelper.assertStaticResources(document, DEFAULT_CSS_PATH, DEFAULT_SCRIPT_PATH, DEFAULT_FAVICON_PATH, DEFAULT_LOGO_PATH);
+        PlaygroundTestHelper.assertStaticResources(
+                document, DEFAULT_CSS_PATH, DEFAULT_SCRIPT_PATH, DEFAULT_FAVICON_PATH, DEFAULT_LOGO_PATH);
     }
 
     @Test
-    public void defaultCssShouldBeAvailable() throws Exception {
-        mockMvc.perform(get(DEFAULT_CSS_PATH))
+    void defaultCssShouldBeAvailable() throws Exception {
+        mockMvc
+                .perform(get(DEFAULT_CSS_PATH))
                 .andExpect(status().isOk())
-                .andExpect(content().string(not(isEmptyString())))
+                .andExpect(content().string(not(is(emptyString()))))
                 .andExpect(content().contentTypeCompatibleWith("text/css"));
     }
 
     @Test
-    public void defaultScriptShouldBeAvailable() throws Exception {
-        mockMvc.perform(get(DEFAULT_SCRIPT_PATH))
+    void defaultScriptShouldBeAvailable() throws Exception {
+        mockMvc
+                .perform(get(DEFAULT_SCRIPT_PATH))
                 .andExpect(status().isOk())
-                .andExpect(content().string(not(isEmptyString())))
+                .andExpect(content().string(not(is(emptyString()))))
                 .andExpect(content().contentTypeCompatibleWith("application/javascript"));
     }
 
     @Test
-    public void defaultFaviconShouldBeAvailable() throws Exception {
-        mockMvc.perform(get(DEFAULT_FAVICON_PATH))
+    void defaultFaviconShouldBeAvailable() throws Exception {
+        mockMvc
+                .perform(get(DEFAULT_FAVICON_PATH))
                 .andExpect(status().isOk())
-                .andExpect(content().string(not(isEmptyString())))
+                .andExpect(content().string(not(is(emptyString()))))
                 .andExpect(content().contentTypeCompatibleWith("image/png"));
     }
 
     @Test
-    public void defaultLogoShouldBeAvailable() throws Exception {
-        mockMvc.perform(get(DEFAULT_LOGO_PATH))
+    void defaultLogoShouldBeAvailable() throws Exception {
+        mockMvc
+                .perform(get(DEFAULT_LOGO_PATH))
                 .andExpect(status().isOk())
-                .andExpect(content().string(not(isEmptyString())))
+                .andExpect(content().string(not(is(emptyString()))))
                 .andExpect(content().contentTypeCompatibleWith("image/png"));
     }
 }

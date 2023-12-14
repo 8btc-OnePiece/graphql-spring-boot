@@ -3,7 +3,7 @@ package graphql.kickstart.playground.boot.properties.settings;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
-import javax.validation.constraints.Min;
+import jakarta.validation.constraints.Min;
 
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)

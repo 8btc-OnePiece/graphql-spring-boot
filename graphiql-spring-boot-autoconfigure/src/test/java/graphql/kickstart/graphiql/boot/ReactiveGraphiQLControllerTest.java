@@ -1,22 +1,24 @@
 package graphql.kickstart.graphiql.boot;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import graphql.kickstart.graphiql.boot.test.AbstractAutoConfigurationTest;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 
-@RunWith(SpringRunner.class)
 @WebFluxTest
-public class ReactiveGraphiQLControllerTest {
+public class ReactiveGraphiQLControllerTest  extends AbstractAutoConfigurationTest {
 
     @Autowired
     private WebTestClient webTestClient;
+    public ReactiveGraphiQLControllerTest() {
+        super(AnnotationConfigWebApplicationContext.class, GraphiQLAutoConfiguration.class);
+    }
 
     @Test
     public void shouldBeAbleToAccessGraphiQL() {
