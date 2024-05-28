@@ -25,7 +25,7 @@ public class TestUtils {
   }
 
   public static Map<String, Object> assertNoGraphQLErrors(
-          GraphQL gql, Map<String, Object> args, Object context, String query) {
+      GraphQL gql, Map<String, Object> args, Object context, String query) {
     ExecutionResult result = execute(gql, args, context, query);
 
     if (!result.getErrors().isEmpty()) {
@@ -41,34 +41,34 @@ public class TestUtils {
   }
 
   private static ExecutionResult execute(
-          GraphQL gql, Map<String, Object> args, Object context, String query) {
+      GraphQL gql, Map<String, Object> args, Object context, String query) {
     return gql.execute(
-            ExecutionInput.newExecutionInput()
-                    .query(query)
-                    .context(context)
-                    .root(context)
-                    .variables(args));
+        ExecutionInput.newExecutionInput()
+            .query(query)
+            .context(context)
+            .root(context)
+            .variables(args));
   }
 
   public static void assertGraphQLError(
-          GraphQL gql, String query, GraphQLError error, GraphQLObjectMapper objectMapper) {
+      GraphQL gql, String query, GraphQLError error, GraphQLObjectMapper objectMapper) {
     ExecutionResult result =
-            objectMapper.sanitizeErrors(execute(gql, new HashMap<>(), new Object(), query));
+        objectMapper.sanitizeErrors(execute(gql, new HashMap<>(), new Object(), query));
 
     String expectedError = toString(error);
     if (result.getErrors().isEmpty()) {
       throw new AssertionError(
-              "GraphQL result did not contain any errors!Expected: \n" + expectedError);
+          "GraphQL result did not contain any errors!Expected: \n" + expectedError);
     }
 
     if (result.getErrors().stream()
-            .map(TestUtils::toString)
-            .noneMatch(e -> e.equals(expectedError))) {
+        .map(TestUtils::toString)
+        .noneMatch(e -> e.equals(expectedError))) {
       throw new AssertionError(
-              "GraphQL result did not contain expected error!\nExpected:"
-                      + expectedError
-                      + "\nActual:"
-                      + formatErrors(result));
+          "GraphQL result did not contain expected error!\nExpected:"
+              + expectedError
+              + "\nActual:"
+              + formatErrors(result));
     }
   }
 

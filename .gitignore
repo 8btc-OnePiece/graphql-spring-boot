@@ -9,7 +9,8 @@ build
 bin
 
 ## Directory-based project format:
-.idea/
+.idea/*
+!.idea/codeStyles/
 # if you remove the above rule, at least ignore the following:
 
 # User-specific stuff:
@@ -59,3 +60,13 @@ com_crashlytics_export_strings.xml
 crashlytics.properties
 crashlytics-build.properties
 fabric.properties
+
+# Mac
+
+.DS_Store
+
+# Node
+
+**/node_modules
+**/.husky
+/projectFilesBackup/.idea/workspace.xml

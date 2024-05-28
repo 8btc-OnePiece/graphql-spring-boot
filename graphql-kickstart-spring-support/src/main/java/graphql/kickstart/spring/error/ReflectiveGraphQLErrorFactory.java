@@ -15,15 +15,16 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 class ReflectiveGraphQLErrorFactory implements GraphQLErrorFactory {
 
   private final boolean singularReturnType;
-  private Object object;
-  private Method method;
-  private Throwables throwables;
+  private final boolean withErrorContext;
+  private final Object object;
+  private final Method method;
+  private final Throwables throwables;
 
   ReflectiveGraphQLErrorFactory(Object object, Method method) {
     this.object = object;
     this.method = method;
     singularReturnType = GraphQLError.class.isAssignableFrom(method.getReturnType());
-
+    withErrorContext = method.getParameterCount() == 2;
     throwables = new Throwables(method.getAnnotation(ExceptionHandler.class).value());
   }
 
@@ -33,17 +34,25 @@ class ReflectiveGraphQLErrorFactory implements GraphQLErrorFactory {
   }
 
   @Override
-  public Collection<GraphQLError> create(Throwable t) {
+  public Collection<GraphQLError> create(Throwable t, ErrorContext errorContext) {
     try {
-      method.setAccessible(true);
       if (singularReturnType) {
-        return singletonList((GraphQLError) method.invoke(object, t));
+        return singletonList((GraphQLError) invoke(t, errorContext));
       }
-      return (Collection<GraphQLError>) method.invoke(object, t);
+      //noinspection unchecked
+      return (Collection<GraphQLError>) invoke(t, errorContext);
     } catch (IllegalAccessException | InvocationTargetException e) {
       log.error("Cannot create GraphQLError from throwable {}", t.getClass().getSimpleName(), e);
       return singletonList(new GenericGraphQLError(t.getMessage()));
     }
   }
 
+  private Object invoke(Throwable t, ErrorContext errorContext)
+      throws IllegalAccessException, InvocationTargetException {
+    if (withErrorContext) {
+      return method.invoke(object, t, errorContext);
+    } else {
+      return method.invoke(object, t);
+    }
+  }
 }

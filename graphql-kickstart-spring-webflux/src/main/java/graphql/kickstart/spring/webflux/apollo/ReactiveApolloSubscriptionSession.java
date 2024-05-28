@@ -10,7 +10,8 @@ public class ReactiveApolloSubscriptionSession extends ApolloSubscriptionSession
 
   private final ReactiveWebSocketSubscriptionSession session;
 
-  public ReactiveApolloSubscriptionSession(GraphQLSubscriptionMapper mapper, WebSocketSession webSocketSession) {
+  public ReactiveApolloSubscriptionSession(
+      GraphQLSubscriptionMapper mapper, WebSocketSession webSocketSession) {
     super(mapper);
     session = new ReactiveWebSocketSubscriptionSession(mapper, webSocketSession);
   }
@@ -18,6 +19,12 @@ public class ReactiveApolloSubscriptionSession extends ApolloSubscriptionSession
   @Override
   public boolean isOpen() {
     return session.isOpen();
+  }
+
+  @Override
+  public void close(String reason) {
+    super.close(reason);
+    session.close(reason);
   }
 
   @Override
@@ -34,5 +41,4 @@ public class ReactiveApolloSubscriptionSession extends ApolloSubscriptionSession
   public WebSocketSession unwrap() {
     return session.unwrap();
   }
-
 }
