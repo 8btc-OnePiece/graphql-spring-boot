@@ -1,11 +1,9 @@
 package graphql.kickstart.autoconfigure.web.servlet.test.web;
 
-import graphql.Assert;
 import graphql.kickstart.servlet.AbstractGraphQLHttpServlet;
 import graphql.kickstart.servlet.config.DefaultGraphQLSchemaServletProvider;
 import graphql.kickstart.servlet.config.GraphQLSchemaServletProvider;
-import graphql.kickstart.spring.web.boot.GraphQLWebAutoConfiguration;
-import graphql.kickstart.spring.web.boot.test.AbstractAutoConfigurationTest;
+
 import static graphql.Scalars.GraphQLString;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -16,9 +14,6 @@ import graphql.execution.ExecutionStrategy;
 import graphql.execution.instrumentation.tracing.TracingInstrumentation;
 import graphql.kickstart.autoconfigure.web.servlet.GraphQLWebAutoConfiguration;
 import graphql.kickstart.autoconfigure.web.servlet.test.AbstractAutoConfigurationTest;
-import graphql.kickstart.servlet.AbstractGraphQLHttpServlet;
-import graphql.kickstart.servlet.config.DefaultGraphQLSchemaServletProvider;
-import graphql.kickstart.servlet.config.GraphQLSchemaServletProvider;
 import graphql.schema.GraphQLFieldDefinition;
 import graphql.schema.GraphQLObjectType;
 import graphql.schema.GraphQLSchema;
