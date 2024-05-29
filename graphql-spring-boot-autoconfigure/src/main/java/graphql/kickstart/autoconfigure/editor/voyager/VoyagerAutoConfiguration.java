@@ -1,13 +1,13 @@
 package graphql.kickstart.autoconfigure.editor.voyager;
 
+import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
 /** @author Guilherme Blanco */
-@Configuration
+@AutoConfiguration
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
 @ConditionalOnProperty(value = "graphql.voyager.enabled", havingValue = "true")
 @EnableConfigurationProperties(VoyagerPropertiesConfiguration.class)

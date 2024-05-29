@@ -1,7 +1,7 @@
 package graphql.kickstart.autoconfigure.editor.playground.properties.settings;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import javax.validation.constraints.Min;
+import jakarta.validation.constraints.Min;
 import lombok.Data;
 
 @Data

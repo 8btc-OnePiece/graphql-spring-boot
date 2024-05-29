@@ -21,9 +21,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 
-/**
- * @author Marcel Overdijk
- */
+/** @author Marcel Overdijk */
 @AutoConfiguration
 @RequiredArgsConstructor
 @ConditionalOnClass(MetricsAutoConfiguration.class)

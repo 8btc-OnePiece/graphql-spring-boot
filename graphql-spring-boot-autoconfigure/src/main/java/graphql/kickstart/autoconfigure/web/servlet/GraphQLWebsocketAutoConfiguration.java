@@ -8,12 +8,12 @@ import graphql.kickstart.execution.subscriptions.GraphQLSubscriptionInvocationIn
 import graphql.kickstart.execution.subscriptions.SubscriptionConnectionListener;
 import graphql.kickstart.execution.subscriptions.apollo.KeepAliveSubscriptionConnectionListener;
 import graphql.kickstart.servlet.GraphQLWebsocketServlet;
+import jakarta.websocket.server.ServerContainer;
 import java.time.Duration;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
-import javax.websocket.server.ServerContainer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
@@ -26,6 +26,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplicat
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
+import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 import org.springframework.web.servlet.DispatcherServlet;
 import org.springframework.web.socket.server.standard.ServerEndpointExporter;
 import org.springframework.web.socket.server.standard.ServerEndpointRegistration;
@@ -35,7 +36,6 @@ import org.springframework.web.socket.server.standard.ServerEndpointRegistration
 @ConditionalOnWebApplication(type = Type.SERVLET)
 @ConditionalOnClass({DispatcherServlet.class, ServerEndpointRegistration.class})
 @Conditional(OnSchemaOrSchemaProviderBean.class)
-@SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
 @ConditionalOnProperty(
     value = "graphql.servlet.websocket.enabled",
     havingValue = "true",
@@ -76,9 +76,27 @@ public class GraphQLWebsocketAutoConfiguration {
   }
 
   @Bean
+  public WsCsrfFilter wsCsrfFilter(
+      @Autowired(required = false) WsCsrfTokenRepository csrfTokenRepository) {
+    return new WsCsrfFilter(websocketProperties.getCsrf(), csrfTokenRepository);
+  }
+
+  @Bean
+  @ConditionalOnMissingBean
+  @ConditionalOnClass(HttpSessionCsrfTokenRepository.class)
+  public WsCsrfTokenRepository wsCsrfTokenRepository() {
+    return new WsSessionCsrfTokenRepository();
+  }
+
+  @Bean
   @ConditionalOnClass(ServerContainer.class)
-  public ServerEndpointRegistration serverEndpointRegistration(GraphQLWebsocketServlet servlet) {
-    return new GraphQLWsServerEndpointRegistration(websocketProperties.getPath(), servlet);
+  public ServerEndpointRegistration serverEndpointRegistration(
+      GraphQLWebsocketServlet servlet, WsCsrfFilter csrfFilter) {
+    return new GraphQLWsServerEndpointRegistration(
+        websocketProperties.getPath(),
+        servlet,
+        csrfFilter,
+        websocketProperties.getAllowedOrigins());
   }
 
   @Bean

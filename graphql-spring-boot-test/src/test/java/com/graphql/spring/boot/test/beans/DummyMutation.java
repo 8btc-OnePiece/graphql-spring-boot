@@ -6,7 +6,7 @@ import graphql.schema.DataFetchingEnvironment;
 import graphql.schema.GraphQLScalarType;
 import java.util.List;
 import java.util.stream.Collectors;
-import javax.servlet.http.Part;
+import jakarta.servlet.http.Part;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 

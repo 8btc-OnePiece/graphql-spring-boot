@@ -1,6 +1,7 @@
 package graphql.kickstart.autoconfigure.web.servlet.metrics;
 
 import graphql.ExecutionResult;
+import graphql.execution.instrumentation.InstrumentationState;
 import graphql.execution.instrumentation.parameters.InstrumentationExecutionParameters;
 import graphql.execution.instrumentation.tracing.TracingInstrumentation;
 import io.micrometer.core.instrument.MeterRegistry;
@@ -39,6 +40,12 @@ public class MetricsInstrumentation extends TracingInstrumentation {
   @Override
   public CompletableFuture<ExecutionResult> instrumentExecutionResult(
       ExecutionResult executionResult, InstrumentationExecutionParameters parameters) {
+    return this.instrumentExecutionResult(executionResult, parameters, null);
+  }
+
+  @Override
+  public CompletableFuture<ExecutionResult> instrumentExecutionResult(
+      ExecutionResult executionResult, InstrumentationExecutionParameters parameters, InstrumentationState rawState) {
 
     if (executionResult.getExtensions() != null
         && executionResult.getExtensions().containsKey(TRACING)) {

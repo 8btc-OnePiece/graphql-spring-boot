@@ -2,7 +2,7 @@ package graphql.kickstart.autoconfigure.editor.graphiql;
 
 import java.io.IOException;
 import java.util.Map;
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.buffer.DataBufferFactory;
 import org.springframework.core.io.buffer.DefaultDataBufferFactory;

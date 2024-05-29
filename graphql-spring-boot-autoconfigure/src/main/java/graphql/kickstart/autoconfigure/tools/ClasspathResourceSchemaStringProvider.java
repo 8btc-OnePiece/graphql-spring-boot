@@ -10,18 +10,17 @@ import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
 
+@Slf4j
+@AllArgsConstructor
 public class ClasspathResourceSchemaStringProvider implements SchemaStringProvider {
 
-  @Autowired private ApplicationContext applicationContext;
+  private ApplicationContext applicationContext;
   private String schemaLocationPattern;
-
-  public ClasspathResourceSchemaStringProvider(String schemaLocationPattern) {
-    this.schemaLocationPattern = schemaLocationPattern;
-  }
 
   @Override
   public List<String> schemaStrings() throws IOException {

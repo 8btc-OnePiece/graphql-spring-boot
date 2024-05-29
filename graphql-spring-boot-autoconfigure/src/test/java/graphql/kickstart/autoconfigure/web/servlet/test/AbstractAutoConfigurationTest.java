@@ -2,8 +2,8 @@ package graphql.kickstart.autoconfigure.web.servlet.test;
 
 import static org.mockito.Mockito.mock;
 
-import javax.servlet.ServletContext;
-import javax.websocket.server.ServerContainer;
+import jakarta.servlet.ServletContext;
+import jakarta.websocket.server.ServerContainer;
 import org.junit.jupiter.api.AfterEach;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
@@ -61,14 +61,14 @@ public abstract class AbstractAutoConfigurationTest {
     getContext().refresh();
     getContext()
         .publishEvent(
-            new ApplicationReadyEvent(new SpringApplication(), new String[0], getContext()));
+            new ApplicationReadyEvent(new SpringApplication(), new String[0], getContext(), null));
   }
 
   private void loadServletContext() {
     if (context instanceof AnnotationConfigWebApplicationContext) {
       ServerContainer serverContainer = mock(ServerContainer.class);
       ServletContext servletContext = new MockServletContext();
-      servletContext.setAttribute("javax.websocket.server.ServerContainer", serverContainer);
+      servletContext.setAttribute("jakarta.websocket.server.ServerContainer", serverContainer);
       ((AnnotationConfigWebApplicationContext) context).setServletContext(servletContext);
     }
   }

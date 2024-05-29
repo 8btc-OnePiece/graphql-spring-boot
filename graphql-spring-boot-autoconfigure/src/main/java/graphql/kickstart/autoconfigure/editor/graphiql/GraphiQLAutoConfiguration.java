@@ -3,6 +3,7 @@ package graphql.kickstart.autoconfigure.editor.graphiql;
 import static org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication.Type.REACTIVE;
 import static org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication.Type.SERVLET;
 
+import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -16,13 +17,15 @@ import org.springframework.web.reactive.function.server.RouterFunctions;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+;
 
 /**
  * @author Andrew Potter
  * @author Ronny Bräunlich
  */
-@Configuration
+@AutoConfiguration
 @ConditionalOnProperty(value = "graphql.graphiql.enabled", havingValue = "true")
 @EnableConfigurationProperties(GraphiQLProperties.class)
 public class GraphiQLAutoConfiguration {

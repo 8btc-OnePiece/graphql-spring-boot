@@ -19,8 +19,8 @@
 
 dependencies {
     api "com.graphql-java-kickstart:graphql-java-tools:$LIB_GRAPHQL_JAVA_TOOLS_VER"
-    api(project(":graphql-kickstart-spring-support"))
-    api(project(':graphql-kickstart-spring-webflux'))
+    api project(":graphql-kickstart-spring-support")
+    api project(':graphql-kickstart-spring-webflux')
     api "com.graphql-java:graphql-java-extended-scalars:$LIB_EXTENDED_SCALARS_VER"
     api "com.graphql-java-kickstart:graphql-java-kickstart:$LIB_GRAPHQL_SERVLET_VER"
     api "com.graphql-java-kickstart:graphql-java-servlet:$LIB_GRAPHQL_SERVLET_VER"
@@ -46,7 +46,7 @@ dependencies {
     compileOnly "org.springframework.boot:spring-boot-configuration-processor"
     compileOnly "org.springframework.boot:spring-boot-starter-web"
 
-    testImplementation(project(":graphql-spring-boot-starter-test"))
+    testImplementation project(":graphql-spring-boot-starter-test")
     testImplementation "com.graphql-java:graphql-java:$LIB_GRAPHQL_JAVA_VER"
     testImplementation "org.springframework.boot:spring-boot-starter-web"
     testImplementation "org.springframework.boot:spring-boot-starter-test"
@@ -57,7 +57,7 @@ dependencies {
     testImplementation "org.springframework.boot:spring-boot-starter-security"
     testImplementation "org.springframework.security:spring-security-test"
     testImplementation "io.projectreactor:reactor-core"
-    testImplementation "io.reactivex.rxjava2:rxjava"
+    testImplementation "io.reactivex.rxjava2:rxjava:2.2.21"
     testImplementation "org.jsoup:jsoup:$LIB_JSOUP_VER"
 }
 

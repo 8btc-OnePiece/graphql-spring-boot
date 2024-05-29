@@ -2,8 +2,8 @@ package graphql.kickstart.autoconfigure.tools;
 
 import static org.mockito.Mockito.mock;
 
-import javax.servlet.ServletContext;
-import javax.websocket.server.ServerContainer;
+import jakarta.servlet.ServletContext;
+import jakarta.websocket.server.ServerContainer;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.AfterEach;
 import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;

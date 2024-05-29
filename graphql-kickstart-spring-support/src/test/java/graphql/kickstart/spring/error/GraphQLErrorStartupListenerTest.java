@@ -34,6 +34,6 @@ class GraphQLErrorStartupListenerTest {
         new AnnotationConfigWebApplicationContext();
     annotationConfigWebApplicationContext.refresh();
     return new ApplicationReadyEvent(
-        new SpringApplication(), new String[0], annotationConfigWebApplicationContext);
+        new SpringApplication(), new String[0], annotationConfigWebApplicationContext, null);
   }
 }

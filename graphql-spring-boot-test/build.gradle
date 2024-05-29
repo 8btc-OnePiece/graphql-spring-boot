@@ -17,15 +17,18 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 dependencies {
-    implementation("org.springframework:spring-web")
-    implementation("org.springframework.boot:spring-boot-starter-test")
-    implementation("com.fasterxml.jackson.core:jackson-databind")
-    implementation("com.jayway.jsonpath:json-path")
+    compileOnly 'jakarta.servlet:jakarta.servlet-api:6.0.0'
+    compileOnly 'jakarta.websocket:jakarta.websocket-api:2.1.1'
+    compileOnly 'jakarta.websocket:jakarta.websocket-client-api:2.1.1'
+    implementation "org.springframework:spring-web"
+    implementation "org.springframework.boot:spring-boot-starter-test"
+    implementation "com.fasterxml.jackson.core:jackson-databind"
+    implementation "com.jayway.jsonpath:json-path"
     implementation "org.awaitility:awaitility:$LIB_AWAITILITY_VER"
-    compileOnly("com.graphql-java:graphql-java:$LIB_GRAPHQL_JAVA_VER")
-    compileOnly("com.graphql-java-kickstart:graphql-java-servlet:$LIB_GRAPHQL_SERVLET_VER")
-    testImplementation("org.springframework.boot:spring-boot-starter-web")
+    compileOnly "com.graphql-java-kickstart:graphql-java-servlet:$LIB_GRAPHQL_SERVLET_VER"
+    testImplementation "org.springframework.boot:spring-boot-starter-web"
     testImplementation "org.springframework.boot:spring-boot-starter-websocket"
     testImplementation project(":graphql-spring-boot-starter")
-    testImplementation "io.reactivex.rxjava2:rxjava"
+    testImplementation "io.reactivex.rxjava2:rxjava:2.2.21"
+
 }

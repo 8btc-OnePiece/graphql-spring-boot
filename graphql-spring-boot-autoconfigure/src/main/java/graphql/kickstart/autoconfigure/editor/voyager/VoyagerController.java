@@ -4,7 +4,7 @@ import static graphql.kickstart.autoconfigure.editor.EditorConstants.CSRF_ATTRIB
 
 import java.io.IOException;
 import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;

@@ -3,6 +3,7 @@ package graphql.kickstart.autoconfigure.web.servlet;
 import graphql.kickstart.autoconfigure.web.OnSchemaOrSchemaProviderBean;
 import java.util.concurrent.Executor;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -12,13 +13,12 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplicat
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.security.authentication.DefaultAuthenticationEventPublisher;
 import org.springframework.security.task.DelegatingSecurityContextAsyncTaskExecutor;
 import org.springframework.web.servlet.DispatcherServlet;
 
-@Configuration
+@AutoConfiguration
 @RequiredArgsConstructor
 @ConditionalOnWebApplication(type = Type.SERVLET)
 @Conditional(OnSchemaOrSchemaProviderBean.class)
