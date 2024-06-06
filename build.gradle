@@ -47,7 +47,7 @@ subprojects {
         apply plugin: "io.spring.dependency-management"
     }
     apply plugin: 'maven-publish'
-    apply plugin: 'signing'
+//    apply plugin: 'signing'
 
     ext['graphql-java.version'] = "$LIB_GRAPHQL_JAVA_VER"
 
@@ -132,15 +132,15 @@ subprojects {
         }
     }
 
-    if (!version.toString().endsWith('-SNAPSHOT')) {
-        ext["signing.keyId"] = System.env.SIGNING_KEY_ID
-        ext["signing.password"] = System.env.SIGNING_PASSWORD
-        ext["signing.secretKeyRingFile"] = System.env.SIGNING_SECRET_KEY_RING_FILE
-
-        signing {
-            sign publishing.publications
-        }
-    }
+//    if (!version.toString().endsWith('-SNAPSHOT')) {
+//        ext["signing.keyId"] = System.env.SIGNING_KEY_ID
+//        ext["signing.password"] = System.env.SIGNING_PASSWORD
+//        ext["signing.secretKeyRingFile"] = System.env.SIGNING_SECRET_KEY_RING_FILE
+//
+//        signing {
+//            sign publishing.publications
+//        }
+//    }
 
     publishing {
         publications {
@@ -165,77 +165,30 @@ subprojects {
                     name = PROJECT_NAME
                     description = PROJECT_DESC
                     url = PROJECT_GIT_REPO_URL
-                    scm {
-                        url = PROJECT_GIT_REPO_URL
-                        connection = PROJECT_GIT_REPO_URL
-                        developerConnection = PROJECT_GIT_REPO_URL
-                    }
-                    licenses {
-                        license {
-                            name = PROJECT_LICENSE
-                            url = PROJECT_LICENSE_URL
-                            distribution = 'repo'
-                        }
-                    }
-                    developers {
-                        developer {
-                            id = 'oliemansm'
-                            name = 'Michiel Oliemans'
-                        }
-                        developer {
-                            id = 'apottere'
-                            name = 'Andrew Porter'
-                        }
-                    }
                 }
             }
         }
       repositories {
-        maven {
-          name = "snapshot"
-          credentials {
-            username = System.env.NEXUS_USERNAME ?: project.findProperty('NEXUS_PASSWORD') ?: ''
-            password = System.env.NEXUS_PASSWORD ?: project.findProperty('NEXUS_PASSWORD') ?: ''
+          mavenLocal()
+          maven {
+              name = "onepiece-releases"
+              credentials {
+                  username System.getenv("MAVEN_CENTRAL_USER")
+                  password System.getenv("MAVEN_CENTRAL_PASSWORD")
+              }
+              allowInsecureProtocol true
+              url = 'https://nexus.8btc-ops.com/repository/maven-releases/'
           }
-          allowInsecureProtocol true
-          url = 'https://nexus.8btc-ops.com/repository/maven-snapshots/'
-        }
       }
     }
 }
 
-nexusPublishing {
-    repositories {
-        sonatype {
-            username = System.env.OSS_USER_TOKEN_KEY ?: project.findProperty('OSS_USER_TOKEN_KEY') ?: ''
-            password = System.env.OSS_USER_TOKEN_PASS ?: project.findProperty('OSS_USER_TOKEN_PASS') ?: ''
-        }
-    }
-}
-//release {
-//  tagTemplate = 'v${version}'
-//  failOnPublishNeeded = false
-//  ignoredSnapshotDependencies = [
-//      'com.graphql-java-kickstart:altair-spring-boot-autoconfigure',
-//      'com.graphql-java-kickstart:altair-spring-boot-starter',
-//      'com.graphql-java-kickstart:graphiql-spring-boot-autoconfigure',
-//      'com.graphql-java-kickstart:graphiql-spring-boot-starter',
-//      'com.graphql-java-kickstart:graphql-spring-boot-autoconfigure',
-//      'com.graphql-java-kickstart:graphql-spring-boot-starter',
-//      'com.graphql-java-kickstart:graphql-spring-boot-starter-test',
-//      'com.graphql-java-kickstart:graphql-spring-boot-test',
-//      'com.graphql-java-kickstart:graphql-spring-boot-test-autoconfigure',
-//      'com.graphql-java-kickstart:voyager-spring-boot-autoconfigure',
-//      'com.graphql-java-kickstart:voyager-spring-boot-starter',
-//      'com.graphql-java-kickstart:playgroud-spring-boot-autoconfigure',
-//      'com.graphql-java-kickstart:playgroud-spring-boot-starter'
-//  ]
-//}
+
 
 task build {
-  dependsOn subprojects.findResults { it.tasks.findByName('assemble') }
-  dependsOn subprojects.findResults { it.tasks.findByName('check') }
-  dependsOn subprojects.findResults { it.tasks.findByName('bintray') }
+    dependsOn subprojects.findResults { it.tasks.findByName('assemble') }
+    dependsOn subprojects.findResults { it.tasks.findByName('check') }
+    dependsOn subprojects.findResults { it.tasks.findByName('bintray') }
 }
 
 wrapper {

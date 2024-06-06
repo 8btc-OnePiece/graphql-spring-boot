@@ -84,6 +84,7 @@ public class VoyagerIndexHtmlTemplate {
             basePath,
             "voyager.worker.js",
             joinJsDelivrPath(voyagerCdnVersion, "dist/voyager.worker.min.js")));
+//    replacements.put("voyagerBodyJsUrl", getResourceUrl(basePath, "voyager.body.js", null));
     replacements.put("contextPath", contextPath);
     replacements.put(
         "voyagerDisplayOptionsSkipRelay",
