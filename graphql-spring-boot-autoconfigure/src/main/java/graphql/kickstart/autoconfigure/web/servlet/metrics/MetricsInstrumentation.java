@@ -3,6 +3,7 @@ package graphql.kickstart.autoconfigure.web.servlet.metrics;
 import graphql.ExceptionWhileDataFetching;
 import graphql.ExecutionResult;
 import graphql.GraphQLError;
+import graphql.execution.instrumentation.InstrumentationState;
 import graphql.execution.instrumentation.parameters.InstrumentationExecutionParameters;
 import graphql.execution.instrumentation.tracing.TracingInstrumentation;
 import io.micrometer.core.instrument.Counter;
@@ -25,7 +26,7 @@ public class MetricsInstrumentation extends TracingInstrumentation {
   private static final String ERROR_COUNTER_METRIC_NAME = "graphql.cunter.error";
   private static final String OPERATION_NAME_TAG = "operationName";
   private static final String OPERATION = "operation";
-  private static final String UNKNOWN_NAME = "unknown";
+  private static final String UNKNOWN_OPERATION_NAME = "unknown";
   private static final String PARENT = "parent";
   private static final String FIELD = "field";
   private static final String PATH = "path";
@@ -52,7 +53,7 @@ public class MetricsInstrumentation extends TracingInstrumentation {
 
   @Override
   public CompletableFuture<ExecutionResult> instrumentExecutionResult(
-      ExecutionResult executionResult, InstrumentationExecutionParameters parameters) {
+      ExecutionResult executionResult, InstrumentationExecutionParameters parameters, InstrumentationState state) {
     transformTracingInfoToMicrometer(executionResult, parameters.getOperation());
     transformErrorInfoToMicrometer(executionResult, parameters.getOperation());
     return CompletableFuture.completedFuture(executionResult);
@@ -130,7 +131,7 @@ public class MetricsInstrumentation extends TracingInstrumentation {
   private Timer buildQueryTimer(String operationName, String operation) {
     return Timer.builder(QUERY_TIME_METRIC_NAME)
         .description(TIMER_DESCRIPTION)
-        .tag(OPERATION_NAME_TAG, operationName != null ? operationName : UNKNOWN_NAME)
+        .tag(OPERATION_NAME_TAG, operationName != null ? operationName : UNKNOWN_OPERATION_NAME)
         .tag(OPERATION, operation)
         .register(meterRegistry);
   }
@@ -139,7 +140,7 @@ public class MetricsInstrumentation extends TracingInstrumentation {
       String operationName, String operation, String parent, String field) {
     return Timer.builder(RESOLVER_TIME_METRIC_NAME)
         .description(TIMER_DESCRIPTION)
-        .tag(OPERATION_NAME_TAG, operationName != null ? operationName : UNKNOWN_NAME)
+        .tag(OPERATION_NAME_TAG, operationName != null ? operationName : UNKNOWN_OPERATION_NAME)
         .tag(PARENT, parent)
         .tag(FIELD, field)
         .tag(OPERATION, operation)
@@ -149,9 +150,9 @@ public class MetricsInstrumentation extends TracingInstrumentation {
   private Counter buildErrorCounter(String operationName, String path, String code, String classification) {
     return Counter.builder(ERROR_COUNTER_METRIC_NAME)
         .description(COUNTER_DESCRIPTION)
-        .tag(PATH, path != null ? path : UNKNOWN_NAME)
-        .tag(CODE, code != null ? code : UNKNOWN_NAME)
-        .tag(CLASSIFICATION, classification != null ? classification : UNKNOWN_NAME)
+        .tag(PATH, path != null ? path : UNKNOWN_OPERATION_NAME)
+        .tag(CODE, code != null ? code : UNKNOWN_OPERATION_NAME)
+        .tag(CLASSIFICATION, classification != null ? classification : UNKNOWN_OPERATION_NAME)
         .register(meterRegistry);
   }
 
